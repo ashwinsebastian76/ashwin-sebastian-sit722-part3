@@ -1,0 +1,22 @@
+# Your Solution
+version: '3'
+services:
+  book_catalog:
+    image: book_catalog:v2
+    build: 
+      context: ./book_catalog
+      dockerfile: Dockerfile
+    container_name: book_catalog
+    environment:
+      - PORT=7000
+      - DATABASE_URL=postgresql://citus:Database123@c-ashwin.ij3khvc66yrngh.postgres.cosmos.azure.com:5432/citus
+
+  inventory_management:
+    image: inventory_management:v2
+    build: 
+      context: ./inventory_management
+      dockerfile: Dockerfile
+    container_name: inventory_management
+    environment:
+      - PORT=7001
+      - DATABASE_URL=postgresql://citus:Database123@c-ashwin.ij3khvc66yrngh.postgres.cosmos.azure.com:5432/citus

@@ -1,0 +1,76 @@
+# Your Solution
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-catalog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-catalog
+  template:
+    metadata:
+      labels:
+        app: book-catalog
+    spec:
+      containers:
+      - name: book-catalog
+        image: ashwin.azurecr.io/book_catalog:v2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 7000
+        env:
+        - name: PORT
+          value: "7000"
+        - name: DATABASE_URL
+          value: "postgresql://citus:Database123@c-ashwin.ij3khvc66yrngh.postgres.cosmos.azure.com:5432/citus"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-catalog
+spec:
+  selector:
+    app: book-catalog
+  type: LoadBalancer
+  ports:
+    - port: 7000
+      targetPort: 7000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inventory-management
+  template:
+    metadata:
+      labels:
+        app: inventory-management
+    spec:
+      containers: 
+      - name: inventory-management
+        image: ashwin.azurecr.io/inventory_management:v2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 7001
+        env:
+        - name: PORT
+          value: "7001"
+        - name: DATABASE_URL
+          value: "postgresql://citus:Database123@c-ashwin.ij3khvc66yrngh.postgres.cosmos.azure.com:5432/citus"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inventory-management
+spec:
+  selector:
+    app: inventory-management
+  type: LoadBalancer
+  ports:
+    - port: 7001
+      targetPort: 7001
